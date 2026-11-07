@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#101116">
+  <title>YupiStars</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand"><div class="logo">YS</div><div><b>YUPISTARS</b><small>Gifts • Cases • Games</small></div></div>
+    <button class="avatar" id="profileBtn">★</button>
+  </header>
+
+  <section class="wallet">
+    <div><small>МОЙ БАЛАНС</small><div class="balance"><span>★</span><b id="balance">0</b><em>Stars</em></div></div>
+    <button class="btn btn-light" id="topupBtn">＋ Пополнить</button>
+  </section>
+
+  <section class="promo">
+    <div class="promo-copy"><span class="tag">YUPISTARS CLUB</span><h1>Открывай кейсы.<br><i>Забирай подарки.</i></h1><p>Коллекционные предметы и игровые режимы в одном месте.</p></div>
+    <div class="promo-emoji">🎁</div>
+  </section>
+
+  <div class="section-title"><div><small>ИГРОВОЕ МЕНЮ</small><h2>Выбирай режим</h2></div><span class="online">● ONLINE</span></div>
+  <nav class="tabs" id="tabs">
+    <button class="tab active" data-tab="cases">🎁 Кейсы</button>
+    <button class="tab" data-tab="eggs">🥚 Яйца</button>
+    <button class="tab" data-tab="slots">🎰 Слоты</button>
+    <button class="tab" data-tab="upgrade">⚡ Апгрейд</button>
+  </nav>
+
+  <section class="catalog-head"><div><small id="eyebrow">КОЛЛЕКЦИЯ</small><h2 id="catalogTitle">Популярные кейсы</h2></div><span class="sort">Все предметы⌄</span></section>
+  <section class="catalog" id="catalog"></section>
+
+  <section class="notice">ⓘ Это демоверсия YupiStars. Баланс, шансы и призы условные. Реальные платежи, NFT и вывод не подключены.</section>
+  <footer>YUPISTARS <span>Версия 2.0 • Demo</span></footer>
+</div>
+
+<nav class="bottom">
+  <button class="bottom-item active" data-tab="home"><span>⌂</span>Главная</button>
+  <button class="bottom-item" data-tab="cases"><span>🎁</span>Кейсы</button>
+  <button class="bottom-item" data-tab="eggs"><span>🥚</span>Яйца</button>
+  <button class="bottom-item" data-tab="profile"><span>♙</span>Профиль</button>
+</nav>
+
+<div class="modal" id="modal" aria-hidden="true">
+  <div class="modal-card">
+    <button class="close" id="closeModal">×</button>
+    <div class="modal-visual" id="modalVisual">🎁</div>
+    <small class="tag" id="modalTag">КЕЙС</small>
+    <h2 id="modalTitle">Название кейса</h2>
+    <p id="modalDescription">Содержимое кейса</p>
+    <div class="prizes" id="prizes"></div>
+    <div class="spin-result" id="spinResult"></div>
+    <button class="btn btn-primary full" id="openCase">Открыть за 25 ★</button>
+    <small class="fineprint">Только демонстрация. Никакие реальные средства не списываются.</small>
+  </div>
+</div>
+<script src="app.js"></script>
+</body>
+</html>
