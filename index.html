@@ -1,35 +1,333 @@
 <!doctype html>
 <html lang="ru">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#0b0a16"><title>YupiStars</title>
-<link rel="stylesheet" href="styles.css">
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#090b12">
+  <title>YupiStars — Cases</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    :root{--bg:#090b12;--panel:#121622;--panel2:#191f2d;--line:#282f40;--text:#f5f7fb;--muted:#929bad;--gold:#ffd36a;--gold2:#ffad42;--purple:#9b7cff;--green:#5ee0a0;--red:#ff7185}
+    *{box-sizing:border-box} body{margin:0;background:radial-gradient(ellipse at 50% -20%,#252044 0,#090b12 52%);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;min-height:100vh}
+    button{font:inherit;cursor:pointer} .app{max-width:520px;margin:0 auto;padding:18px 15px 105px}
+    .top{display:flex;align-items:center;justify-content:space-between;margin:4px 2px 20px}.brand{font-weight:1000;letter-spacing:1.8px;font-size:21px}.brand span{color:var(--gold)}
+    .balance{border:1px solid #55472e;background:#241f17;color:var(--gold);padding:9px 13px;border-radius:14px;font-weight:850}
+    .hero{border:1px solid #39314f;background:linear-gradient(135deg,#211c36,#151a28 70%);border-radius:23px;padding:20px;position:relative;overflow:hidden;margin-bottom:20px}
+    .hero:after{content:"✦";position:absolute;font-size:130px;right:12px;top:-35px;color:#8c72ff;opacity:.12}.eyebrow{color:var(--gold);font-size:11px;letter-spacing:2px;font-weight:900}.hero h1{font-size:27px;line-height:1.12;margin:9px 0}.hero p{color:#b6bdd0;font-size:13px;max-width:280px;line-height:1.5;margin:0}
+    .section-head{display:flex;align-items:end;justify-content:space-between;margin:22px 2px 12px}.section-head h2{font-size:17px;margin:0}.section-head small{color:var(--muted)}
+    .case-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.case{background:linear-gradient(160deg,#1b2130,#111621);border:1px solid var(--line);border-radius:19px;padding:13px;min-width:0}.case-art{height:116px;border-radius:14px;display:grid;place-items:center;font-size:55px;margin-bottom:12px;position:relative;overflow:hidden}.mask-art{background:radial-gradient(circle at 50% 35%,#674e9e,#292442 60%,#171927)}.bear-art{background:radial-gradient(circle at 50% 35%,#a16a39,#443026 60%,#171927)}
+    .case h3{font-size:15px;margin:0 0 5px}.case p{font-size:11px;color:var(--muted);margin:0 0 12px;min-height:28px;line-height:1.35}.price{color:var(--gold);font-weight:900;font-size:13px}.primary{border:0;background:linear-gradient(100deg,var(--gold),var(--gold2));color:#21180b;font-weight:950;border-radius:12px;padding:12px;width:100%;margin-top:10px;box-shadow:0 5px 18px #ffbd4930}.secondary{border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:12px;padding:11px;width:100%;font-weight:800}
+    .nav{position:fixed;z-index:5;bottom:0;left:0;right:0;background:#0d111bea;backdrop-filter:blur(16px);border-top:1px solid var(--line);padding:9px max(10px,env(safe-area-inset-right)) calc(9px + env(safe-area-inset-bottom));display:flex;justify-content:center}.nav-inner{width:100%;max-width:520px;display:grid;grid-template-columns:repeat(4,1fr);gap:5px}.nav button{border:0;background:transparent;color:var(--muted);font-size:10px;font-weight:800;padding:7px 2px;border-radius:12px}.nav button b{display:block;font-size:20px;margin-bottom:3px}.nav button.active{color:var(--gold);background:#292317}
+    .page{display:none}.page.active{display:block}.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:12px}.panel h3{margin:0 0 12px;font-size:16px}.muted{color:var(--muted)}.row{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--line);font-size:13px}.row:last-child{border:0}.big-number{font-size:27px;font-weight:950;color:var(--gold)}
+    .item{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px;background:var(--panel2);border:1px solid var(--line);border-radius:13px;margin:8px 0}.item strong{font-size:13px}.item small{display:block;color:var(--muted);margin-top:4px}.sell{border:1px solid #65512d;background:#302718;color:var(--gold);padding:8px 10px;border-radius:10px;font-size:11px;font-weight:900;white-space:nowrap}
+    .modal-back{position:fixed;inset:0;background:#000b;z-index:10;display:none;align-items:center;justify-content:center;padding:18px}.modal-back.show{display:flex}.modal{width:100%;max-width:420px;background:#151a27;border:1px solid #3b4357;border-radius:22px;padding:20px;text-align:center}.roulette{font-size:38px;margin:15px 0}.result-name{font-size:22px;font-weight:950;color:var(--gold);margin:8px}.odds{text-align:left;font-size:12px;color:#c4cada;line-height:1.9}.notice{font-size:11px;color:var(--muted);line-height:1.5;margin-top:13px}
+    .empty{text-align:center;padding:25px 10px;color:var(--muted)}.pill{display:inline-block;border:1px solid var(--line);background:#1c2230;border-radius:20px;padding:6px 10px;color:#c7cede;font-size:11px}
+
+    .upgrade-box{background:linear-gradient(155deg,#211c36,#121824);border:1px solid #45385f;border-radius:19px;padding:15px;margin-bottom:12px}
+    .upgrade-slots{display:grid;grid-template-columns:1fr 34px 1fr;align-items:center;gap:8px;margin:14px 0}
+    .upgrade-slot{min-height:112px;border:1px dashed #55506d;background:#111622;border-radius:15px;padding:12px 7px;text-align:center;display:flex;flex-direction:column;justify-content:center;gap:7px}
+    .upgrade-slot .slot-icon{font-size:28px}.upgrade-slot strong{font-size:12px}.upgrade-slot small{color:var(--muted);font-size:10px}
+    .upgrade-arrow{text-align:center;color:var(--gold);font-size:22px;font-weight:900}
+    .upgrade-select{width:100%;padding:12px;border-radius:11px;border:1px solid var(--line);background:#0e1320;color:var(--text);margin-top:7px}
+    .target-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:10px}
+    .target-card{border:1px solid var(--line);background:#171e2c;color:var(--text);border-radius:12px;padding:10px 7px;text-align:left}
+    .target-card.selected{border-color:var(--gold);background:#302719;box-shadow:0 0 0 1px #ffd36a40}
+    .target-card strong{display:block;font-size:12px;margin-top:4px}.target-card small{color:var(--muted);font-size:10px}
+    .chance-track{height:9px;border-radius:10px;background:#303748;overflow:hidden;margin:9px 0 5px}
+    .chance-fill{height:100%;width:0;background:linear-gradient(90deg,var(--purple),var(--gold));border-radius:10px;transition:width .25s}
+    .upgrade-result{font-size:46px;margin:12px 0}
+
+    .upgrade-wheel-wrap{display:flex;justify-content:center;align-items:center;padding:16px 0 12px}
+    .upgrade-wheel{width:190px;height:190px;border-radius:50%;position:relative;display:grid;place-items:center;
+      background:conic-gradient(from -90deg,var(--green) 0deg 70deg,#343b4d 70deg 360deg);
+      box-shadow:0 0 0 7px #252c3c,0 0 28px #9b7cff35,inset 0 0 0 2px #ffffff18}
+    .upgrade-wheel:before{content:"";position:absolute;inset:13px;border-radius:50%;background:radial-gradient(circle at 35% 25%,#252c3c,#101521 72%);border:1px solid #596078}
+    .upgrade-wheel:after{content:"";position:absolute;top:-13px;left:calc(50% - 10px);width:0;height:0;
+      border-left:10px solid transparent;border-right:10px solid transparent;border-top:19px solid var(--gold);
+      filter:drop-shadow(0 2px 4px #0009);z-index:3}
+    .wheel-pointer{position:absolute;z-index:2;width:5px;height:75px;left:calc(50% - 2.5px);top:20px;
+      transform-origin:50% 75px;transform:rotate(0deg);border-radius:8px;background:linear-gradient(var(--gold),#fff2bd);
+      box-shadow:0 0 12px #ffd36a88}
+    .wheel-hub{position:absolute;z-index:4;width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold2));
+      border:4px solid #252c3c;box-shadow:0 0 0 2px #ffffff22}
+    .wheel-label{position:absolute;z-index:2;bottom:39px;font-size:10px;font-weight:950;letter-spacing:1px;color:#d8dced}
+    .upgrade-wheel.spinning .wheel-pointer{animation:upgradeSpin 2.9s cubic-bezier(.12,.72,.08,1) forwards}
+    .upgrade-wheel.spinning{animation:wheelPulse .65s ease-in-out infinite alternate}
+    @keyframes upgradeSpin{0%{transform:rotate(0deg)}100%{transform:rotate(var(--spin-deg,1440deg))}}
+    @keyframes wheelPulse{from{filter:brightness(1)}to{filter:brightness(1.3)}}
+    .upgrade-wheel.success{background:conic-gradient(from -90deg,var(--green),#23694e,#343b4d 72%,var(--green))}
+    .upgrade-wheel.fail{background:conic-gradient(from -90deg,#ff7185,#542b3b,#343b4d 72%,#ff7185)}
+
+
+    @media(max-width:360px){.case-grid{gap:8px}.case{padding:10px}.case-art{height:95px}}
+  </style>
 </head>
 <body>
-<div class="glow g1"></div><div class="glow g2"></div>
-<header class="top">
- <div class="brand"><div class="brand-mark">✦</div><div><b>YUPI<span>STARS</span></b><small>PLAY • OPEN • COLLECT</small></div></div>
- <div class="balance"><small>ТВОЙ БАЛАНС</small><strong>⭐ <span id="balance">0</span></strong><button id="topup">+</button></div>
-</header>
-<main>
- <section class="hero">
-  <div class="hero-copy"><span class="eyebrow">WELCOME TO THE DROP</span><h1>Открой свою<br><em>удачу</em></h1><p>Коллекционные призы, яркие открытия и твоя история побед.</p></div>
-  <div class="hero-orb">✦</div>
- </section>
- <nav class="tabs" id="tabs">
-  <button class="active" data-tab="cases">🎁 Кейсы</button><button data-tab="eggs">🥚 Яйца</button><button data-tab="slots">🎰 Слоты</button>
- </nav>
- <section class="mode-row">
-  <div><b>Режим открытия</b><small>Сначала попробуй бесплатно</small></div>
-  <div class="switch"><button id="demoMode" class="selected">ДЕМО</button><button id="paidMode">ЗА ⭐</button></div>
- </section>
- <section id="catalog" class="catalog"></section>
- <section class="info-strip"><span>ⓘ</span><p>В демо-режиме результат виртуальный и не имеет денежной или NFT-ценности. В платном режиме шансы указаны в карточке каждого приза.</p></section>
- <section class="bottom-card"><div><small>ТВОЯ КОЛЛЕКЦИЯ</small><h2>Выиграл подарок?</h2><p>Подай заявку на ручную выдачу настоящего подарка администратором.</p></div><button id="withdraw">Заявка ↗</button></section>
-</main>
-<div id="modal" class="modal hidden"><div class="dialog"><button class="close" id="close">×</button><div id="modalContent"></div></div></div>
-<div id="toast" class="toast"></div>
-<footer>YUPISTARS <span>•</span> ИГРАЙ ОТВЕТСТВЕННО</footer>
-<script src="app.js"></script>
-</body></html>
+<div class="app">
+  <header class="top">
+    <div class="brand">YUPI<span>STARS</span></div>
+    <div class="balance">⭐ <span id="balanceTop">10 000</span></div>
+  </header>
+
+  <main>
+    <section id="homePage" class="page active">
+      <div class="hero">
+        <div class="eyebrow">WELCOME TO YUPISTARS</div>
+        <h1>Открывай.<br>Собирай. Побеждай.</h1>
+        <p>Выбирай кейс, испытывай удачу и собирай собственную коллекцию предметов.</p>
+      </div>
+      <div class="section-head"><h2>🎁 Популярные кейсы</h2><small>2 кейса</small></div>
+      <div class="case-grid">
+        <article class="case">
+          <div class="case-art mask-art">🎭</div><h3>MASK CASE</h3>
+          <p>6 уникальных предметов в коллекции</p>
+          <div class="price">249 ⭐</div>
+          <button class="primary" onclick="openCaseInfo('mask')">Открыть кейс</button>
+        </article>
+        <article class="case">
+          <div class="case-art bear-art">🐻</div><h3>BEAR CASE</h3>
+          <p>5 предметов в коллекции</p>
+          <div class="price">499 ⭐</div>
+          <button class="primary" onclick="openCaseInfo('bear')">Открыть кейс</button>
+        </article>
+      </div>
+      <div class="section-head"><h2>✨ Как это работает</h2></div>
+      <div class="panel"><div class="row"><span>1. Выбери кейс</span><span>🎁</span></div><div class="row"><span>2. Запусти открытие</span><span>🎰</span></div><div class="row"><span>3. Забери предмет в инвентарь</span><span>🎒</span></div></div>
+      <p class="notice">Демо-режим: баланс и предметы хранятся локально в этом браузере. Это не реальные Telegram Stars и не денежный счёт.</p>
+    </section>
+
+    <section id="inventoryPage" class="page">
+      <div class="section-head"><h2>🎒 Инвентарь</h2><small id="itemCount">0 предметов</small></div>
+      <div class="panel"><div id="inventoryList"></div></div>
+    </section>
+
+
+    <section id="upgradesPage" class="page">
+      <div class="section-head"><h2>⚡ Апгрейды</h2><small>Улучши свой предмет</small></div>
+      <div class="upgrade-box">
+        <div class="eyebrow">YUPISTARS UPGRADE</div>
+        <h3 style="margin:8px 0 4px">Испытай удачу</h3>
+        <p class="notice" style="margin:0">Выбери предмет из инвентаря и цель дороже него. При успехе получишь новый предмет, при неудаче исходный предмет сгорит.</p>
+        <label class="muted" for="upgradeSource" style="display:block;margin-top:16px;font-size:12px">ТВОЙ ПРЕДМЕТ</label>
+        <select id="upgradeSource" class="upgrade-select" onchange="renderUpgrades()"></select>
+        <div class="upgrade-slots">
+          <div class="upgrade-slot"><span class="slot-icon">🎒</span><strong id="upgradeSourceName">Нет предмета</strong><small id="upgradeSourceValue">Выбери предмет</small></div>
+          <div class="upgrade-arrow">➜</div>
+          <div class="upgrade-slot"><span class="slot-icon">🎯</span><strong id="upgradeTargetName">Выбери цель</strong><small id="upgradeTargetValue">Предмет дороже</small></div>
+        </div>
+        <div class="muted" style="font-size:11px;font-weight:800">ПРЕДМЕТЫ ДЛЯ АПГРЕЙДА</div>
+        <div id="upgradeTargets" class="target-grid"></div>
+        <div class="panel" style="margin:14px 0 0;padding:12px;background:#101521">
+          <div class="row" style="padding-top:0"><span>Шанс успеха</span><strong id="upgradeChance">—</strong></div>
+          <div class="chance-track"><div id="upgradeChanceFill" class="chance-fill"></div></div>
+          <small class="muted">Шанс рассчитывается автоматически по стоимости предметов.</small>
+        </div>
+        <button id="upgradeRun" class="primary" style="margin-top:13px" onclick="performUpgrade()" disabled>⚡ АПГРЕЙД</button>
+      </div>
+      <p class="notice">Апгрейды работают в демо-режиме на этом устройстве. Они не используют реальные Telegram Stars и не создают реальные NFT.</p>
+    </section>
+
+    <section id="profilePage" class="page">
+      <div class="section-head"><h2>👤 Профиль</h2><span class="pill">YupiStars member</span></div>
+      <div class="panel">
+        <div class="muted">ТВОЙ ДЕМО-БАЛАНС</div><div class="big-number">⭐ <span id="balanceProfile">10 000</span></div>
+        <div class="row"><span>Telegram ID</span><strong id="tgId">—</strong></div>
+        <div class="row"><span>Открыто кейсов</span><strong id="openedCount">0</strong></div>
+        <div class="row"><span>Предметов в инвентаре</span><strong id="profileItems">0</strong></div>
+      </div>
+      <div class="panel"><h3>🛠 Демо-настройки</h3><button class="secondary" onclick="resetDemo()">Сбросить демо-прогресс</button><p class="notice">Сброс вернёт стартовый баланс 10 000 ⭐ и очистит коллекцию на этом устройстве.</p></div>
+    </section>
+
+    <section id="balancePage" class="page">
+      <div class="section-head"><h2>⭐ Баланс</h2></div>
+      <div class="panel"><div class="muted">ДОСТУПНО В ДЕМО</div><div class="big-number">⭐ <span id="balancePageValue">10 000</span></div><p class="notice">Пополнение реальными Telegram Stars не подключено. Кнопки ниже демонстрационные.</p><button class="primary" onclick="toast('Платёжный модуль пока не подключён')">Пополнить баланс</button></div>
+    </section>
+  </main>
+</div>
+
+<nav class="nav"><div class="nav-inner" style="grid-template-columns:repeat(5,1fr)">
+  <button class="active" data-page="homePage" onclick="showPage('homePage',this)"><b>🎁</b>Кейсы</button>
+  <button data-page="inventoryPage" onclick="showPage('inventoryPage',this)"><b>🎒</b>Инвентарь</button>
+  <button data-page="upgradesPage" onclick="showPage('upgradesPage',this)"><b>⚡</b>Апгрейд</button>
+  <button data-page="balancePage" onclick="showPage('balancePage',this)"><b>⭐</b>Баланс</button>
+  <button data-page="profilePage" onclick="showPage('profilePage',this)"><b>👤</b>Профиль</button>
+</div></nav>
+
+<div class="modal-back" id="modalBack" onclick="if(event.target===this)closeModal()">
+  <div class="modal" id="modalContent"></div>
+</div>
+
+<script>
+  const tg = window.Telegram?.WebApp;
+  if (tg) { tg.ready(); tg.expand(); try { tg.setHeaderColor('#090b12'); tg.setBackgroundColor('#090b12'); } catch(e) {} }
+
+  const CASES = {
+    mask: {title:'MASK CASE', price:249, icon:'🎭', prizes:[
+      {name:'Chill Fame', rarity:'Обычный', value:180, chance:35},
+      {name:'Love Potion', rarity:'Обычный', value:220, chance:25},
+      {name:'Snoop Dog', rarity:'Редкий', value:420, chance:18},
+      {name:'Vice Cream', rarity:'Редкий', value:650, chance:12},
+      {name:"Khabibs Papakha", rarity:'Эпический', value:1100, chance:7},
+      {name:'Crystal Ball', rarity:'Легендарный', value:2500, chance:3}
+    ]},
+    bear: {title:'BEAR CASE', price:499, icon:'🐻', prizes:[
+      {name:'Mood Pack', rarity:'Обычный', value:300, chance:35},
+      {name:'Holiday Drink', rarity:'Обычный', value:350, chance:27},
+      {name:'LOL Pop', rarity:'Редкий', value:650, chance:18},
+      {name:'Bears', rarity:'Эпический', value:1200, chance:13},
+      {name:'Mask', rarity:'Легендарный', value:2400, chance:7}
+    ]}
+  };
+  const STORE_KEY='yupistars_demo_v1';
+  let state;
+  try { state=JSON.parse(localStorage.getItem(STORE_KEY)); } catch(e) {}
+  if(!state || typeof state.balance!=='number') state={balance:10000,opened:0,items:[]};
+  function save(){localStorage.setItem(STORE_KEY,JSON.stringify(state));updateUI();}
+  function fmt(n){return Number(n).toLocaleString('ru-RU');}
+  function updateUI(){
+    ['balanceTop','balanceProfile','balancePageValue'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=fmt(state.balance)});
+    document.getElementById('openedCount').textContent=state.opened;
+    document.getElementById('profileItems').textContent=state.items.length;
+    document.getElementById('itemCount').textContent=state.items.length+' предметов';
+    const uid=tg?.initDataUnsafe?.user?.id;
+    document.getElementById('tgId').textContent=uid||'Демо-пользователь';
+    renderInventory();
+    if(document.getElementById('upgradesPage')?.classList.contains('active'))renderUpgrades();
+  }
+  function showPage(id,btn){
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
+    if(btn)btn.classList.add('active');
+    if(id==='inventoryPage')renderInventory();
+    if(id==='upgradesPage')renderUpgrades();
+  }
+  function renderInventory(){
+    const host=document.getElementById('inventoryList');
+    if(!state.items.length){host.innerHTML='<div class="empty">🎒<br><br>Пока здесь пусто.<br><span class="muted">Открой первый кейс!</span></div>';return;}
+    host.innerHTML=state.items.map((it,i)=>`<div class="item"><div><strong>${escapeHtml(it.name)}</strong><small>${escapeHtml(it.rarity)} · оценка ${fmt(it.value)} ⭐</small></div><button class="sell" onclick="sellItem(${i})">Продать<br>${fmt(it.sell)} ⭐</button></div>`).join('');
+  }
+  function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+  function openCaseInfo(key){
+    const c=CASES[key];
+    const odds=c.prizes.map(p=>`<div class="row"><span>${escapeHtml(p.name)}</span><strong>${p.chance}%</strong></div>`).join('');
+    document.getElementById('modalContent').innerHTML=`<div style="font-size:42px">${c.icon}</div><h2>${c.title}</h2><p class="muted">Стоимость открытия: <b style="color:var(--gold)">${c.price} ⭐</b></p><div class="odds"><b>Шансы выпадения</b>${odds}</div><button class="primary" onclick="startOpening('${key}')">🎰 Открыть за ${c.price} ⭐</button><button class="secondary" style="margin-top:9px" onclick="closeModal()">Назад</button><p class="notice">Вероятности указаны для демо-режима.</p>`;
+    document.getElementById('modalBack').classList.add('show');
+  }
+  function weightedPrize(c){
+    const r=Math.random()*100;let sum=0;
+    for(const p of c.prizes){sum+=p.chance;if(r<sum)return p;}
+    return c.prizes[c.prizes.length-1];
+  }
+  async function startOpening(key){
+    const c=CASES[key];
+    if(state.balance<c.price){toast('Недостаточно демо-звёзд');return;}
+    state.balance-=c.price;save();
+    const prize=weightedPrize(c); // Select once; animation never changes the result.
+    const modal=document.getElementById('modalContent');
+    const frames=['🎰','🎭','💫','🎁','✨'];
+    modal.innerHTML=`<h2>КЕЙС ОТКРЫВАЕТСЯ</h2><div class="roulette" id="roulette">${frames[0]}</div><p class="muted">Удача уже рядом...</p><div class="pill">YUPISTARS DROP</div>`;
+    for(let i=0;i<frames.length;i++){
+      document.getElementById('roulette').textContent=frames[i];
+      await new Promise(r=>setTimeout(r,300+i*170));
+    }
+    state.opened++;
+    state.items.unshift({name:prize.name,rarity:prize.rarity,value:prize.value,sell:Math.floor(prize.value*.7),case:key});
+    save();
+    modal.innerHTML=`<div style="font-size:54px">🎉</div><div class="eyebrow">ТВОЙ ВЫИГРЫШ</div><div class="result-name">${escapeHtml(prize.name)}</div><p>${escapeHtml(prize.rarity)} · ${fmt(prize.value)} ⭐</p><p class="muted">Предмет добавлен в инвентарь.</p><button class="primary" onclick="closeModal();showPage('inventoryPage',document.querySelector('[data-page=inventoryPage]'))">Перейти в инвентарь</button><button class="secondary" style="margin-top:9px" onclick="closeModal()">Продолжить</button>`;
+  }
+  function sellItem(i){
+    const item=state.items[i];if(!item)return;
+    state.balance+=item.sell;state.items.splice(i,1);save();toast('Продано за '+fmt(item.sell)+' ⭐');
+  }
+
+  let selectedUpgradeTarget = null;
+  function currentUpgradeSource(){
+    const select=document.getElementById('upgradeSource');
+    const index=select ? Number(select.value) : -1;
+    return Number.isInteger(index) && index>=0 ? state.items[index] : null;
+  }
+  function availableUpgradeTargets(source){
+    if(!source)return [];
+    const unique=new Map();
+    Object.values(CASES).flatMap(c=>c.prizes).filter(p=>p.value>source.value).forEach(p=>{
+      const old=unique.get(p.name);
+      if(!old || p.value<old.value)unique.set(p.name,p);
+    });
+    return [...unique.values()].sort((a,b)=>a.value-b.value);
+  }
+  function upgradeChance(source,target){
+    if(!source||!target)return 0;
+    return Math.max(3,Math.min(85,Math.floor((source.value/target.value)*75)));
+  }
+  function renderUpgrades(){
+    const select=document.getElementById('upgradeSource');
+    const previous=select.value;
+    select.innerHTML=state.items.map((it,i)=>`<option value="${i}">${escapeHtml(it.name)} — ${fmt(it.value)} ⭐</option>`).join('');
+    if(state.items.length){
+      if(previous!=='' && Number(previous)<state.items.length)select.value=previous;
+      else select.value='0';
+    }
+    const source=currentUpgradeSource();
+    const targets=availableUpgradeTargets(source);
+    if(!targets.some(t=>t.name===selectedUpgradeTarget))selectedUpgradeTarget=null;
+    const target=targets.find(t=>t.name===selectedUpgradeTarget)||null;
+    document.getElementById('upgradeSourceName').textContent=source?source.name:'Нет предмета';
+    document.getElementById('upgradeSourceValue').textContent=source?`Оценка ${fmt(source.value)} ⭐`:'Сначала открой кейс';
+    document.getElementById('upgradeTargetName').textContent=target?target.name:'Выбери цель';
+    document.getElementById('upgradeTargetValue').textContent=target?`Оценка ${fmt(target.value)} ⭐`:'Предмет дороже';
+    document.getElementById('upgradeTargets').innerHTML=targets.length?targets.map(t=>`
+      <button type="button" class="target-card ${target&&target.name===t.name?'selected':''}" onclick="selectUpgradeTarget('${t.name.replace(/'/g,"&#39;")}')">
+        <span>💎</span><strong>${escapeHtml(t.name)}</strong><small>${escapeHtml(t.rarity)} · ${fmt(t.value)} ⭐</small>
+      </button>`).join(''):'<div class="empty" style="grid-column:1/-1">Нет доступных целей.<br>Нужен предмет из инвентаря.</div>';
+    const chance=upgradeChance(source,target);
+    document.getElementById('upgradeChance').textContent=target?chance+'%':'—';
+    document.getElementById('upgradeChanceFill').style.width=chance+'%';
+    document.getElementById('upgradeRun').disabled=!(source&&target);
+  }
+  function selectUpgradeTarget(name){selectedUpgradeTarget=name;renderUpgrades();}
+  async function performUpgrade(){
+    const source=currentUpgradeSource();
+    const target=availableUpgradeTargets(source).find(t=>t.name===selectedUpgradeTarget);
+    if(!source||!target){toast('Сначала выбери предмет и цель');return;}
+    const sourceIndex=Number(document.getElementById('upgradeSource').value);
+    const chance=upgradeChance(source,target);
+    document.getElementById('upgradeRun').disabled=true;
+    const modal=document.getElementById('modalContent');
+    document.getElementById('modalBack').classList.add('show');
+    const success=Math.random()*100<chance;
+    // The dial animation is visual; the outcome is selected once using the displayed probability.
+    const fullTurns=4;
+    const stopAngle=success ? (25+Math.random()*45) : (110+Math.random()*230);
+    const spinDegrees=fullTurns*360+stopAngle;
+    modal.innerHTML=`<div class="eyebrow">YUPISTARS UPGRADE</div><h2>УЛУЧШЕНИЕ...</h2>
+      <div class="upgrade-wheel-wrap"><div class="upgrade-wheel spinning" id="upgradeWheel" style="--spin-deg:${spinDegrees}deg">
+        <div class="wheel-pointer"></div><div class="wheel-hub"></div><div class="wheel-label">UPGRADE</div>
+      </div></div>
+      <p class="muted">Стрелка вращается — шанс успеха ${chance}%</p>`;
+    await new Promise(r=>setTimeout(r,3100));
+    state.items.splice(sourceIndex,1);
+    if(success){
+      state.items.unshift({name:target.name,rarity:target.rarity,value:target.value,sell:Math.floor(target.value*.7),case:'upgrade'});
+      modal.innerHTML=`<div class="upgrade-wheel-wrap"><div class="upgrade-wheel success"><div class="wheel-hub"></div><div class="wheel-label">SUCCESS</div></div></div><div class="eyebrow">АПГРЕЙД УДАЛСЯ</div><div class="result-name">${escapeHtml(target.name)}</div><p>${escapeHtml(target.rarity)} · ${fmt(target.value)} ⭐</p><p class="muted">Новый предмет добавлен в инвентарь.</p><button class="primary" onclick="closeModal();showPage('inventoryPage',document.querySelector('[data-page=inventoryPage]'))">В инвентарь</button>`;
+    }else{
+      modal.innerHTML=`<div class="upgrade-wheel-wrap"><div class="upgrade-wheel fail"><div class="wheel-hub"></div><div class="wheel-label">FAILED</div></div></div><div class="eyebrow">НЕ ПОВЕЗЛО</div><div class="result-name">Апгрейд не удался</div><p>Предмет «${escapeHtml(source.name)}» потерян.</p><p class="muted">Шанс успеха был ${chance}%.</p><button class="primary" onclick="closeModal()">Понятно</button>`;
+    }
+    selectedUpgradeTarget=null;
+    save();
+  }
+
+  function closeModal(){document.getElementById('modalBack').classList.remove('show');}
+  function toast(msg){
+    const el=document.createElement('div');el.textContent=msg;
+    el.style.cssText='position:fixed;z-index:20;bottom:92px;left:50%;transform:translateX(-50%);background:#252c3c;border:1px solid #4a5368;color:white;padding:12px 16px;border-radius:13px;font-size:13px;max-width:90%;text-align:center';
+    document.body.appendChild(el);setTimeout(()=>el.remove(),2200);
+  }
+  function resetDemo(){
+    if(!confirm('Сбросить баланс и весь инвентарь?'))return;
+    state={balance:10000,opened:0,items:[]};save();toast('Демо-прогресс сброшен');
+  }
+  updateUI();
+</script>
+</body>
+</html> 
