@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#17191f" />
+  <title>YupiStars</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script>window.YUPI_API = ""; /* адрес вашего сервера, например https://api.example.com */</script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand-mark">YS</div>
+      <div class="brand-copy"><strong>YUPISTARS</strong><span>Подарки начинаются здесь</span></div>
+      <button class="profile-chip" id="profileBtn" aria-label="Профиль">★</button>
+    </header>
+
+    <main>
+      <section class="balance-panel">
+        <div><span class="eyebrow">ТВОЙ БАЛАНС</span><div class="balance"><span class="star">★</span><strong id="balance">0</strong><small>Stars</small></div></div>
+        <button class="primary-btn" id="topupBtn">Пополнить</button>
+      </section>
+
+      <section class="hero">
+        <div class="hero-copy">
+          <span class="eyebrow">YUPISTARS CLUB</span>
+          <h1>Твоя коллекция<br><em>начинается здесь</em></h1>
+          <p>Выбирай раздел и знакомься с коллекцией.</p>
+        </div>
+        <div class="hero-art" aria-hidden="true"><span>🎁</span><b>✦</b><i>★</i></div>
+      </section>
+
+      <section class="section-heading">
+        <div><span class="eyebrow">ВЫБИРАЙ СВОЁ</span><h2>Игры и коллекции</h2></div>
+        <span class="live-pill"><i></i> YUPI</span>
+      </section>
+
+      <section class="category-grid" aria-label="Разделы">
+        <button class="category-card cases" data-tab="cases">
+          <span class="category-icon">🎁</span><span class="category-name">Кейсы</span><span class="category-desc">Коллекция кейсов</span><span class="card-arrow">↗</span>
+        </button>
+        <button class="category-card eggs" data-tab="eggs">
+          <span class="category-icon">🥚</span><span class="category-name">Яйца</span><span class="category-desc">Коллекция яиц</span><span class="card-arrow">↗</span>
+        </button>
+        <button class="category-card slots" data-tab="slots">
+          <span class="category-icon">🎰</span><span class="category-name">Слоты</span><span class="category-desc">Демо-режим</span><span class="card-arrow">↗</span>
+        </button>
+        <button class="category-card withdraw" id="withdrawBtn">
+          <span class="category-icon">💬</span><span class="category-name">Заявка на вывод</span><span class="category-desc">Через партнёра @yupirelayer</span><span class="card-arrow">↗</span>
+        </button>
+      </section>
+
+      <section class="content-panel" id="contentPanel">
+        <div class="section-heading compact"><div><span class="eyebrow" id="panelEyebrow">КОЛЛЕКЦИЯ</span><h2 id="panelTitle">Популярные кейсы</h2></div></div>
+        <div class="item-grid" id="itemGrid"></div>
+      </section>
+
+      <section class="notice"><span>ⓘ</span><p>Это предварительная демоверсия интерфейса. Баланс, открытия и награды пока не являются реальными операциями.</p></section>
+    </main>
+
+    <nav class="bottom-nav">
+      <button class="nav-item active" data-tab="home"><span>⌂</span>Главная</button>
+      <button class="nav-item" data-tab="cases"><span>🎁</span>Кейсы</button>
+      <button class="nav-item" data-tab="eggs"><span>🥚</span>Яйца</button>
+      <button class="nav-item" data-tab="slots"><span>🎰</span>Слоты</button>
+    </nav>
+  </div>
+
+  <div class="welcome-overlay" id="welcome">
+    <div class="welcome-card">
+      <div class="welcome-logo">YS</div>
+      <span class="eyebrow">WELCOME TO</span>
+      <h2>YUPI<span>STARS</span></h2>
+      <p>Добро пожаловать в мир коллекций и подарков.</p>
+      <button class="primary-btn wide" id="enterBtn">Открыть приложение <span>→</span></button>
+      <small>Продолжая, ты принимаешь правила приложения.</small>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal">
+    <div class="modal-card"><button class="modal-close" id="modalClose">×</button><div class="modal-icon" id="modalIcon">✨</div><h3 id="modalTitle">Раздел</h3><p id="modalText">Это демонстрационный экран.</p><button class="primary-btn wide" id="modalOk">Понятно</button></div>
+  </div>
+  <div class="sheet-overlay" id="sheetOverlay">
+    <div class="sheet" id="sheet">
+      <button class="modal-close" id="sheetClose" aria-label="Закрыть">×</button>
+      <div class="sheet-art" id="sheetArt"></div>
+      <h3 id="sheetTitle"></h3><p class="sheet-tag" id="sheetTag"></p>
+      <div class="reel" id="reel" hidden><i class="reel-pin"></i><div class="reel-track" id="reelTrack"></div></div>
+      <div class="result" id="result"></div>
+      <div id="dropsBox"><span class="eyebrow">ЧТО ВНУТРИ</span><div class="drops" id="drops"></div></div>
+      <button class="primary-btn wide" id="openBtn">Открыть</button>
+      <small class="sheet-note" id="sheetNote"></small>
+    </div>
+  </div>
+
+  <div class="sheet-overlay" id="withdrawOverlay">
+    <div class="sheet withdraw-sheet">
+      <button class="modal-close" id="withdrawClose" aria-label="Закрыть">×</button>
+      <span class="eyebrow">YUPISTARS • ВЫВОД</span><h3>Заявка на вывод</h3>
+      <p class="hint">Заполни данные. Откроется чат с партнёром @yupirelayer с подготовленным сообщением. Заявка не отправится, пока ты сам не отправишь сообщение.</p>
+      <label class="field"><span>Твой Telegram @username</span><input id="withdrawUsername" placeholder="@username"></label>
+      <label class="field"><span>Что хочешь вывести</span><input id="withdrawGift" placeholder="Название подарка или сумма"></label>
+      <label class="field"><span>Комментарий (необязательно)</span><input id="withdrawComment" placeholder="Дополнительная информация"></label>
+      <button class="primary-btn wide" id="sendWithdraw">Продолжить в @yupirelayer →</button>
+      <small class="sheet-note">Перед отправкой проверь текст заявки в Telegram.</small>
+    </div>
+  </div>
+  <div class="sheet-overlay" id="topupOverlay">
+    <div class="sheet topup">
+      <button class="modal-close" id="topupClose" aria-label="Закрыть">×</button>
+      <h3>Пополнение баланса</h3>
+      <div class="tt-tabs"><button class="tt active" data-t="stars">★ Звёзды</button><button class="tt" data-t="gifts">🎁 Подарки</button><button class="tt" data-t="rub">₽ СБП</button></div>
+      <div id="topupBody"></div>
+      <small class="sheet-note" id="topupMsg"></small>
+    </div>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
